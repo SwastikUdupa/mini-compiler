@@ -3,8 +3,15 @@
   #include<stdlib.h>
   int yyerror();
 %}
+<<<<<<< HEAD
 
 %token DIGIT PRINT ID IF
+||||||| merged common ancestors
+
+%token DIGIT PRINT ID
+=======
+%token DIGIT PRINT ID IF
+>>>>>>> 161a7a5e0a6c3e4e184899e3fb47034c0ef20ea5
 
 %left '+' '-'
 %left '*'
@@ -21,6 +28,7 @@ start:	ID '(' ')' '{' stmt '}' {
 				}
 
 	;
+
 
 
 stmt:
