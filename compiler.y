@@ -4,7 +4,7 @@
   int yyerror();
 %}
 
-%token DIGIT NEWLINE PRINT ID VOID MAIN
+%token DIGIT PRINT ID
 
 %left '+' '-'
 %left '*'

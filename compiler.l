@@ -1,54 +1,28 @@
 %{
   #include <stdio.h>
-  #include<stdlib.h>
-  int yyerror();
+  #include "y.tab.h"
 %}
 
-%token DIGIT NEWLINE PRINT ID VOID MAIN
-
-%left '+' '-'
-%left '*'
+alpha [a-zA-Z]
+digit [0-9]
 
 %%
 
-start:	ID '(' ')' '{' stmt '}' {
-									printf("Compiled successfully\n");
-									exit(0);
-								}
-		|stmt	{
-					printf("Compiled successfully\n");
-					exit(0);
-				}
-	;
-
-
-stmt:	/*empty*/
-		|PRINT '(' expr ')' stmt
-		|PRINT '(' ID ')'
-		|assignment stmt
-
-	;
-
-
-expr: expr '+' expr 
-	| expr '-' expr 
-	| expr '*' expr	 
-	| '(' expr ')' 	 
-	| DIGIT		
-	;
-
-assignment:ID '=' DIGIT 
-	;
+[\t] ;
+[\n] ;
+"+" {return *yytext;}
+"-" {return *yytext;}
+"*" {return *yytext;}
+"/" {return *yytext;}
+"print" {return PRINT;}
+{digit}+ {return DIGIT;}
+{alpha}({alpha}|{digit})* {return ID;}
+\/\/.* ;
+\/\*(.*\n)*.*\*\/ ;
+. {return *yytext;}
 %%
 
-int yyerror()
+yywrap()
 {
-	printf("Error\n");
-	return 0;
-}
-
-int main()
-{
-  yyparse();
-  return 1;
+	return 1;
 }
