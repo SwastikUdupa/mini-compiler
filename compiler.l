@@ -15,8 +15,10 @@ digit [0-9]
 "*" {return *yytext;}
 "/" {return *yytext;}
 "print" {return PRINT;}
+"if" {return IF;}
 {digit}+ {return DIGIT;}
 {alpha}({alpha}|{digit})* {return ID;}
+
 \/\/.* ;
 \/\*(.*\n)*.*\*\/ ;
 . {return *yytext;}

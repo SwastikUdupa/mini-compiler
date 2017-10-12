@@ -3,8 +3,7 @@
   #include<stdlib.h>
   int yyerror();
 %}
-
-%token DIGIT PRINT ID
+%token DIGIT PRINT ID IF
 
 %left '+' '-'
 %left '*'
@@ -22,28 +21,36 @@ start:	ID '(' ')' '{' stmt '}' {
 	;
 
 
-stmt:	/*empty*/
+stmt:/*empty*/
 		|PRINT '(' expr ')' stmt
 		|PRINT '(' ID ')'
+    |IF '(' COND ')' '{' stmt '}' stmt
 		|assignment stmt
-
 	;
 
+COND: DIGIT
+      | var '<' var
+      | var '>' var
+      | var '<''=' var
+      | var '>''=' var
+      | assignment ;
 
-expr: expr '+' expr 
-	| expr '-' expr 
-	| expr '*' expr	 
-	| '(' expr ')' 	 
-	| DIGIT		
+var : DIGIT | ID ;
+
+expr: expr '+' expr
+	| expr '-' expr
+	| expr '*' expr
+	| '(' expr ')'
+	| DIGIT
 	;
 
-assignment:ID '=' DIGIT 
+assignment:ID '=' DIGIT
 	;
 %%
 
 int yyerror()
 {
-	printf("Error\n");
+	printf("Syntax Error\n");
 	return 0;
 }
 
