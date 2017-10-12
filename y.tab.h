@@ -47,13 +47,15 @@ extern int yydebug;
   {
     DIGIT = 258,
     PRINT = 259,
-    ID = 260
+    ID = 260,
+    IF = 261
   };
 #endif
 /* Tokens.  */
 #define DIGIT 258
 #define PRINT 259
 #define ID 260
+#define IF 261
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
