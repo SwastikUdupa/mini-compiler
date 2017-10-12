@@ -5,6 +5,7 @@
 %}
 
 %token DIGIT PRINT ID IF
+%token ELSE
 
 %left '+' '-'
 %left '*'
@@ -26,9 +27,13 @@ start:	ID '(' ')' '{' stmt '}' {
 stmt:
 		|PRINT '(' expr ')' stmt
 		|PRINT '(' ID ')'
-    |IF '(' COND ')' '{' stmt '}' stmt
+    |IF '(' COND ')' '{' stmt '}' el
 		|assignment stmt
 	;
+
+el:
+      stmt
+      |ELSE '{' stmt '}' stmt ;
 
 COND: DIGIT
       | var '<' var
