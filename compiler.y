@@ -4,7 +4,7 @@
   int yyerror();
 %}
 
-%token DIGIT PRINT ID IF
+%token DIGIT PRINT ID IF CASE BREAK SWITCH DEFAULT
 %token ELSE
 
 
@@ -30,12 +30,21 @@ stmt:
 		|PRINT '(' expr ')' stmt
 		|PRINT '(' ID ')'
     |IF '(' COND ')' '{' stmt '}' el
+    | SWITCH '(' ID ')' '{' Case '}' stmt
 		|assignment stmt
 	;
 
 el:
       stmt
       |ELSE '{' stmt '}' stmt ;
+
+Case :
+      | CASE ':' var stmt BREAK ';' Case
+      | default
+      ;
+
+default:
+      DEFAULT ':' stmt BREAK ';' ;
 
 COND: DIGIT
       | var '<' var
@@ -50,10 +59,10 @@ expr: expr '+' expr
 	| expr '-' expr
 	| expr '*' expr
 	| '(' expr ')'
-	| DIGIT
+	| var
 	;
 
-assignment:ID '=' DIGIT
+assignment:ID '=' expr
 	;
 
 
