@@ -22,7 +22,6 @@ digit [0-9]
 \/\/.* ;
 \/\*(.*\n)*.*\*\/ ;
 . {return *yytext;}
-
 %%
 
 yywrap()

@@ -3,7 +3,6 @@
   #include<stdlib.h>
   int yyerror();
 %}
-
 %token DIGIT PRINT ID IF
 
 %left '+' '-'
@@ -19,11 +18,10 @@ start:	ID '(' ')' '{' stmt '}' {
 					printf("Compiled successfully\n");
 					exit(0);
 				}
-
 	;
 
 
-stmt:
+stmt:/*empty*/
 		|PRINT '(' expr ')' stmt
 		|PRINT '(' ID ')'
     |IF '(' COND ')' '{' stmt '}' stmt
@@ -48,9 +46,6 @@ expr: expr '+' expr
 
 assignment:ID '=' DIGIT
 	;
-
-
-
 %%
 
 int yyerror()
