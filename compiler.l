@@ -15,6 +15,7 @@ digit [0-9]
 "*" {return *yytext;}
 "/" {return *yytext;}
 "print" {return PRINT;}
+"else" {return ELSE;}
 "if" {return IF;}
 {digit}+ {return DIGIT;}
 {alpha}({alpha}|{digit})* {return ID;}
@@ -22,6 +23,7 @@ digit [0-9]
 \/\/.* ;
 \/\*(.*\n)*.*\*\/ ;
 . {return *yytext;}
+
 %%
 
 yywrap()
