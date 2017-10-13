@@ -16,6 +16,10 @@ digit [0-9]
 "/" {return *yytext;}
 "print" {return PRINT;}
 "else" {return ELSE;}
+"switch" {return SWITCH;}
+"case" {return CASE;}
+"default" {return DEFAULT;}
+"break" {return BREAK;}
 "if" {return IF;}
 {digit}+ {return DIGIT;}
 {alpha}({alpha}|{digit})* {return ID;}
