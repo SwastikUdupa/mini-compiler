@@ -4,8 +4,7 @@
   int yyerror();
 %}
 
-%token DIGIT PRINT ID IF
-%token ELSE
+%token DIGIT PRINT ID IF ENDIF ELSE START END TAB IN RANGE FOR ENDFOR
 
 
 %left '+' '-'
@@ -13,11 +12,11 @@
 
 %%
 
-start:	ID '(' ')' '{' stmt '}' {
+start:	START ID '(' ')' '{' stmt '}' END {
 									printf("Compiled successfully\n");
 									exit(0);
 								}
-		|stmt	{
+		|START stmt END	{
 					printf("Compiled successfully\n");
 					exit(0);
 				}
@@ -26,16 +25,20 @@ start:	ID '(' ')' '{' stmt '}' {
 
 
 
-stmt:
+stmt:	/*empty*/
 		|PRINT '(' expr ')' stmt
-		|PRINT '(' ID ')'
-    |IF '(' COND ')' '{' stmt '}' el
+		|PRINT '(' ID ')' stmt
+    	|IF '(' COND ')' stmt else ENDIF stmt
+    	|FOR ID IN RANGE '(' DIGIT ',' DIGIT ')' stmt ENDFOR stmt
+    	|FOR ID IN RANGE '(' DIGIT ')' stmt ENDFOR stmt
+    	|FOR ID IN RANGE '(' DIGIT ',' DIGIT ',' DIGIT ')' stmt ENDFOR stmt
 		|assignment stmt
 	;
 
-el:
-      stmt
-      |ELSE '{' stmt '}' stmt ;
+else: 	ELSE stmt
+		|stmt
+	;
+
 
 COND: DIGIT
       | var '<' var
@@ -44,7 +47,9 @@ COND: DIGIT
       | var '>''=' var
       | assignment ;
 
-var : DIGIT | ID ;
+var : DIGIT 
+	| ID 
+	;
 
 expr: expr '+' expr
 	| expr '-' expr
