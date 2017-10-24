@@ -23,8 +23,6 @@ start:	START ID '(' ')' '{' stmt '}' END {
 
 	;
 
-
-
 stmt:	/*empty*/
 		|PRINT '(' expr ')' stmt
 		|PRINT '(' ID ')' stmt
@@ -59,9 +57,39 @@ expr: expr '+' expr
 	;
 
 assignment:ID '=' DIGIT
+		|ID '=' arr
+		|ID '=' dict
 	;
 
+arr_ele1:/*empty*/
+		|',' DIGIT arr_ele1
+	;
 
+arr_ele2:/*empty*/
+		|',' ID arr_ele2
+	;
+
+arr: '[' DIGIT arr_ele1 ']'
+	|'[' ID arr_ele2 ']'
+	;
+
+dict_ele1:/*empty*/
+		|',' DIGIT ':' ID dict_ele1
+
+dict_ele2:/*empty*/
+		|',' DIGIT ':' DIGIT dict_ele2
+
+dict_ele3:/*empty*/
+		|',' ID ':' ID dict_ele3
+
+dict_ele4:/*empty*/
+		|',' ID ':' DIGIT dict_ele4
+
+dict:'[' DIGIT ':' ID dict_ele1 ']'
+	| '[' DIGIT ':' DIGIT dict_ele2 ']'
+	| '[' ID ':' ID dict_ele3 ']'
+	| '[' ID ':' DIGIT dict_ele4 ']'
+	;
 
 %%
 
