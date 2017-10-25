@@ -1,10 +1,22 @@
 %{
   #include <stdio.h>
-  #include<stdlib.h>
+  #include <string.h>
+  #include <stdlib.h>
   int yyerror();
+
+  int table[100],i,count=0;
+  int overall_level = 0;
+  char symbol[100][100], temp[100];
+
+  struct 
+  {
+  	int t[100];
+  	int s[100];
+  }levels[1000];
+
 %}
 
-%token DIGIT PRINT ID IF ENDIF ELSE START END TAB IN RANGE FOR ENDFOR
+%token DIGIT PRINT ID IF ENDIF ELSE START END TAB IN RANGE FOR ENDFOR FLOAT_DIGIT NL FLOAT INT
 
 
 %left '+' '-'
@@ -12,41 +24,44 @@
 
 %%
 
-start:	START ID '(' ')' '{' stmt '}' END {
-									printf("Compiled successfully\n");
-									exit(0);
-								}
-		|START stmt END	{
-					printf("Compiled successfully\n");
-					exit(0);
-				}
+start:	START ID '(' ')' newline '{' newline stmt newline '}' END 	{			
+																			printf("Compiled successfully\n");
+																			exit(0);
+																	}
+		|START newline stmt END			{
+											printf("Compiled successfully\n");
+											exit(0);
+										}
 
 	;
 
-stmt:	/*empty*/
-		|PRINT '(' expr ')' stmt
-		|PRINT '(' ID ')' stmt
-    	|IF '(' COND ')' stmt else ENDIF stmt
-    	|FOR ID IN RANGE '(' DIGIT ',' DIGIT ')' stmt ENDFOR stmt
-    	|FOR ID IN RANGE '(' DIGIT ')' stmt ENDFOR stmt
-    	|FOR ID IN RANGE '(' DIGIT ',' DIGIT ',' DIGIT ')' stmt ENDFOR stmt
-		|assignment stmt
+stmt:	assignment newline
+		|PRINT '(' expr ')' newline
+		|PRINT '(' expr ')' newline stmt
+		|PRINT '(' ID ')' newline
+		|PRINT '(' ID ')' newline stmt
+		|IF '(' COND ')' newline stmt newline else ENDIF newline
+    	|IF '(' COND ')' newline stmt newline else ENDIF newline stmt
+		|assignment newline stmt
 	;
 
 else: 	ELSE stmt
-		|stmt
+		|newline stmt
 	;
 
+newline: NL newline
+		|NL
 
 COND: DIGIT
       | var '<' var
       | var '>' var
       | var '<''=' var
       | var '>''=' var
-      | assignment ;
+      | var '=''=' var
 
-var : DIGIT 
-	| ID 
+var :DIGIT 
+	|FLOAT_DIGIT
+	|ID 
 	;
 
 expr: expr '+' expr
@@ -54,41 +69,59 @@ expr: expr '+' expr
 	| expr '*' expr
 	| '(' expr ')'
 	| DIGIT
+	| FLOAT_DIGIT
 	;
 
-assignment:ID '=' DIGIT
-		|ID '=' arr
-		|ID '=' dict
+assignment:INT int_assign
+		  |FLOAT float_assign
+		  |FLOAT ID '=' arr
+		  |INT ID '=' arr
+		  |ID '=' dict
 	;
 
-arr_ele1:/*empty*/
-		|',' DIGIT arr_ele1
+int_assign:ID '=' DIGIT 							{strcpy(temp, (char*)$1);insert(0);}
+		  |int_assign ',' ID '=' DIGIT 				{strcpy(temp, (char*)$3);insert(0);}
+		  |int_assign ',' ID 						{strcpy(temp, (char*)$3);insert(0);}
+		  |ID 										{strcpy(temp, (char*)$1);insert(0);}
 	;
 
-arr_ele2:/*empty*/
-		|',' ID arr_ele2
+float_assign:float_assign ',' ID '=' FLOAT_DIGIT	{strcpy(temp, (char*)$3);insert(1);}
+		|float_assign ',' ID '=' DIGIT				{strcpy(temp, (char*)$3);insert(1);}
+		| ID '=' FLOAT_DIGIT 						{strcpy(temp, (char*)$1);insert(1);}
+		| ID '=' DIGIT 								{strcpy(temp, (char*)$1);insert(1);}
+		| float_assign ',' ID 						{strcpy(temp, (char*)$3);insert(1);}
+		| ID 										{strcpy(temp, (char*)$1);insert(1);}
 	;
 
-arr: '[' DIGIT arr_ele1 ']'
-	|'[' ID arr_ele2 ']'
+arr_ele1: ID
+		|ID ',' arr_ele1
+
+
+arr_ele2:DIGIT
+		|DIGIT ',' arr_ele2
 	;
 
-dict_ele1:/*empty*/
-		|',' DIGIT ':' ID dict_ele1
+arr: '[' arr_ele1 ']'
+	|'[' arr_ele2 ']'
+	;
 
-dict_ele2:/*empty*/
-		|',' DIGIT ':' DIGIT dict_ele2
+dict_ele1:DIGIT ':' ID dict_ele1
+		|DIGIT ':' ID
 
-dict_ele3:/*empty*/
-		|',' ID ':' ID dict_ele3
+dict_ele2:DIGIT ':' DIGIT dict_ele2
+		|DIGIT ':' DIGIT
 
-dict_ele4:/*empty*/
-		|',' ID ':' DIGIT dict_ele4
+dict_ele3:ID ':' ID dict_ele3
+		|ID ':' ID
 
-dict:'[' DIGIT ':' ID dict_ele1 ']'
-	| '[' DIGIT ':' DIGIT dict_ele2 ']'
-	| '[' ID ':' ID dict_ele3 ']'
-	| '[' ID ':' DIGIT dict_ele4 ']'
+dict_ele4:ID ':' DIGIT dict_ele4
+		|ID ':' DIGIT
+
+
+dict:'{' dict_ele1 '}'
+	| '{' dict_ele2 '}'
+	| '{' dict_ele3 '}'
+	| '{' dict_ele4 '}'
 	;
 
 %%
@@ -102,5 +135,35 @@ int yyerror()
 int main()
 {
   yyparse();
+
   return 1;
+}
+int insert(int x)
+{
+	int i=0, flag = 0, eq_flag = 0;
+	char temp2[100];
+	while(temp[i]!='\0')
+	{
+		if(temp[i]=='=')
+			break;
+		temp2[i] = temp[i];
+		i++;
+	}
+	for(i=0;i<count;i++)
+	{
+		if(strcmp(temp2, symbol[i])==0)
+		{
+			if(table[i]==x)		
+				printf("Redecleration of variable\n");
+			else
+				printf("Multiple decleration of variable\n");
+			flag = 1;
+		}
+	}
+	if(flag == 0)
+	{
+		strcpy(symbol[count], temp2);
+		table[count] = x;
+		count++;
+	}
 }

@@ -9,13 +9,15 @@ digit [0-9]
 %%
 
 [\t] {return TAB;}
-[\n] ;
+[\n] {return NL;}
 " "  ;
 "+" {return *yytext;}
 "-" {return *yytext;}
 "*" {return *yytext;}
 "/" {return *yytext;}
 "print" {return PRINT;}
+"int" {return INT;}
+"float" {return FLOAT;}
 "else" {return ELSE;}
 "endif" {return ENDIF;}
 "if" {return IF;}
@@ -25,8 +27,10 @@ digit [0-9]
 "in" {return IN;}
 "range" {return RANGE;}
 "start" {return START;}
+{digit}+"."{digit}+ {return FLOAT_DIGIT;}
 {digit}+ {return DIGIT;}
-{alpha}({alpha}|{digit})* {return ID;}
+{alpha}({alpha}|{digit})* {yylval=yytext;
+						   return ID;}
 
 \/\/.* ;
 \/\*(.*\n)*.*\*\/ ;
