@@ -1,0 +1,1474 @@
+Terminals unused in grammar
+
+   TAB
+   IN
+   RANGE
+   FOR
+   ENDFOR
+
+
+State 4 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: start $end
+
+    1 start: START ID '(' ')' newline '{' newline stmt newline '}' END
+    2      | START newline stmt END
+
+    3 stmt: assignment newline
+    4     | PRINT '(' expr ')' newline
+    5     | PRINT '(' expr ')' newline stmt
+    6     | PRINT '(' ID ')' newline
+    7     | PRINT '(' ID ')' newline stmt
+    8     | IF '(' COND ')' newline stmt newline else ENDIF newline
+    9     | IF '(' COND ')' newline stmt newline else ENDIF newline stmt
+   10     | assignment newline stmt
+
+   11 else: ELSE stmt
+   12     | newline stmt
+
+   13 newline: NL newline
+   14        | NL
+
+   15 COND: DIGIT
+   16     | var '<' var
+   17     | var '>' var
+   18     | var '<' '=' var
+   19     | var '>' '=' var
+   20     | var '=' '=' var
+
+   21 var: DIGIT
+   22    | FLOAT_DIGIT
+   23    | ID
+
+   24 expr: expr '+' expr
+   25     | expr '-' expr
+   26     | expr '*' expr
+   27     | '(' expr ')'
+   28     | DIGIT
+   29     | FLOAT_DIGIT
+
+   30 assignment: INT int_assign
+   31           | FLOAT float_assign
+   32           | FLOAT ID '=' arr
+   33           | INT ID '=' arr
+   34           | ID '=' dict
+
+   35 int_assign: ID '=' DIGIT
+   36           | int_assign ',' ID '=' DIGIT
+   37           | int_assign ',' ID
+   38           | ID
+
+   39 float_assign: float_assign ',' ID '=' FLOAT_DIGIT
+   40             | float_assign ',' ID '=' DIGIT
+   41             | ID '=' FLOAT_DIGIT
+   42             | ID '=' DIGIT
+   43             | float_assign ',' ID
+   44             | ID
+
+   45 arr_ele1: ID
+   46         | ID ',' arr_ele1
+
+   47 arr_ele2: DIGIT
+   48         | DIGIT ',' arr_ele2
+
+   49 arr: '[' arr_ele1 ']'
+   50    | '[' arr_ele2 ']'
+
+   51 dict_ele1: DIGIT ':' ID dict_ele1
+   52          | DIGIT ':' ID
+
+   53 dict_ele2: DIGIT ':' DIGIT dict_ele2
+   54          | DIGIT ':' DIGIT
+
+   55 dict_ele3: ID ':' ID dict_ele3
+   56          | ID ':' ID
+
+   57 dict_ele4: ID ':' DIGIT dict_ele4
+   58          | ID ':' DIGIT
+
+   59 dict: '{' dict_ele1 '}'
+   60     | '{' dict_ele2 '}'
+   61     | '{' dict_ele3 '}'
+   62     | '{' dict_ele4 '}'
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 1 4 5 6 7 8 9 27
+')' (41) 1 4 5 6 7 8 9 27
+'*' (42) 26
+'+' (43) 24
+',' (44) 36 37 39 40 43 46 48
+'-' (45) 25
+':' (58) 51 52 53 54 55 56 57 58
+'<' (60) 16 18
+'=' (61) 18 19 20 32 33 34 35 36 39 40 41 42
+'>' (62) 17 19
+'[' (91) 49 50
+']' (93) 49 50
+'{' (123) 1 59 60 61 62
+'}' (125) 1 59 60 61 62
+error (256)
+DIGIT (258) 15 21 28 35 36 40 42 47 48 51 52 53 54 57 58
+PRINT (259) 4 5 6 7
+ID (260) 1 6 7 23 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 51 52
+    55 56 57 58
+IF (261) 8 9
+ENDIF (262) 8 9
+ELSE (263) 11
+START (264) 1 2
+END (265) 1 2
+TAB (266)
+IN (267)
+RANGE (268)
+FOR (269)
+ENDFOR (270)
+FLOAT_DIGIT (271) 22 29 39 41
+NL (272) 13 14
+FLOAT (273) 31 32
+INT (274) 30 33
+
+
+Nonterminals, with rules where they appear
+
+$accept (34)
+    on left: 0
+start (35)
+    on left: 1 2, on right: 0
+stmt (36)
+    on left: 3 4 5 6 7 8 9 10, on right: 1 2 5 7 8 9 10 11 12
+else (37)
+    on left: 11 12, on right: 8 9
+newline (38)
+    on left: 13 14, on right: 1 2 3 4 5 6 7 8 9 10 12 13
+COND (39)
+    on left: 15 16 17 18 19 20, on right: 8 9
+var (40)
+    on left: 21 22 23, on right: 16 17 18 19 20
+expr (41)
+    on left: 24 25 26 27 28 29, on right: 4 5 24 25 26 27
+assignment (42)
+    on left: 30 31 32 33 34, on right: 3 10
+int_assign (43)
+    on left: 35 36 37 38, on right: 30 36 37
+float_assign (44)
+    on left: 39 40 41 42 43 44, on right: 31 39 40 43
+arr_ele1 (45)
+    on left: 45 46, on right: 46 49
+arr_ele2 (46)
+    on left: 47 48, on right: 48 50
+arr (47)
+    on left: 49 50, on right: 32 33
+dict_ele1 (48)
+    on left: 51 52, on right: 51 59
+dict_ele2 (49)
+    on left: 53 54, on right: 53 60
+dict_ele3 (50)
+    on left: 55 56, on right: 55 61
+dict_ele4 (51)
+    on left: 57 58, on right: 57 62
+dict (52)
+    on left: 59 60 61 62, on right: 34
+
+
+State 0
+
+    0 $accept: . start $end
+
+    START  shift, and go to state 1
+
+    start  go to state 2
+
+
+State 1
+
+    1 start: START . ID '(' ')' newline '{' newline stmt newline '}' END
+    2      | START . newline stmt END
+
+    ID  shift, and go to state 3
+    NL  shift, and go to state 4
+
+    newline  go to state 5
+
+
+State 2
+
+    0 $accept: start . $end
+
+    $end  shift, and go to state 6
+
+
+State 3
+
+    1 start: START ID . '(' ')' newline '{' newline stmt newline '}' END
+
+    '('  shift, and go to state 7
+
+
+State 4
+
+   13 newline: NL . newline
+   14        | NL .
+
+    NL  shift, and go to state 4
+
+    NL        [reduce using rule 14 (newline)]
+    $default  reduce using rule 14 (newline)
+
+    newline  go to state 8
+
+
+State 5
+
+    2 start: START newline . stmt END
+
+    PRINT  shift, and go to state 9
+    ID     shift, and go to state 10
+    IF     shift, and go to state 11
+    FLOAT  shift, and go to state 12
+    INT    shift, and go to state 13
+
+    stmt        go to state 14
+    assignment  go to state 15
+
+
+State 6
+
+    0 $accept: start $end .
+
+    $default  accept
+
+
+State 7
+
+    1 start: START ID '(' . ')' newline '{' newline stmt newline '}' END
+
+    ')'  shift, and go to state 16
+
+
+State 8
+
+   13 newline: NL newline .
+
+    $default  reduce using rule 13 (newline)
+
+
+State 9
+
+    4 stmt: PRINT . '(' expr ')' newline
+    5     | PRINT . '(' expr ')' newline stmt
+    6     | PRINT . '(' ID ')' newline
+    7     | PRINT . '(' ID ')' newline stmt
+
+    '('  shift, and go to state 17
+
+
+State 10
+
+   34 assignment: ID . '=' dict
+
+    '='  shift, and go to state 18
+
+
+State 11
+
+    8 stmt: IF . '(' COND ')' newline stmt newline else ENDIF newline
+    9     | IF . '(' COND ')' newline stmt newline else ENDIF newline stmt
+
+    '('  shift, and go to state 19
+
+
+State 12
+
+   31 assignment: FLOAT . float_assign
+   32           | FLOAT . ID '=' arr
+
+    ID  shift, and go to state 20
+
+    float_assign  go to state 21
+
+
+State 13
+
+   30 assignment: INT . int_assign
+   33           | INT . ID '=' arr
+
+    ID  shift, and go to state 22
+
+    int_assign  go to state 23
+
+
+State 14
+
+    2 start: START newline stmt . END
+
+    END  shift, and go to state 24
+
+
+State 15
+
+    3 stmt: assignment . newline
+   10     | assignment . newline stmt
+
+    NL  shift, and go to state 4
+
+    newline  go to state 25
+
+
+State 16
+
+    1 start: START ID '(' ')' . newline '{' newline stmt newline '}' END
+
+    NL  shift, and go to state 4
+
+    newline  go to state 26
+
+
+State 17
+
+    4 stmt: PRINT '(' . expr ')' newline
+    5     | PRINT '(' . expr ')' newline stmt
+    6     | PRINT '(' . ID ')' newline
+    7     | PRINT '(' . ID ')' newline stmt
+
+    DIGIT        shift, and go to state 27
+    ID           shift, and go to state 28
+    FLOAT_DIGIT  shift, and go to state 29
+    '('          shift, and go to state 30
+
+    expr  go to state 31
+
+
+State 18
+
+   34 assignment: ID '=' . dict
+
+    '{'  shift, and go to state 32
+
+    dict  go to state 33
+
+
+State 19
+
+    8 stmt: IF '(' . COND ')' newline stmt newline else ENDIF newline
+    9     | IF '(' . COND ')' newline stmt newline else ENDIF newline stmt
+
+    DIGIT        shift, and go to state 34
+    ID           shift, and go to state 35
+    FLOAT_DIGIT  shift, and go to state 36
+
+    COND  go to state 37
+    var   go to state 38
+
+
+State 20
+
+   32 assignment: FLOAT ID . '=' arr
+   41 float_assign: ID . '=' FLOAT_DIGIT
+   42             | ID . '=' DIGIT
+   44             | ID .
+
+    '='  shift, and go to state 39
+
+    $default  reduce using rule 44 (float_assign)
+
+
+State 21
+
+   31 assignment: FLOAT float_assign .
+   39 float_assign: float_assign . ',' ID '=' FLOAT_DIGIT
+   40             | float_assign . ',' ID '=' DIGIT
+   43             | float_assign . ',' ID
+
+    ','  shift, and go to state 40
+
+    $default  reduce using rule 31 (assignment)
+
+
+State 22
+
+   33 assignment: INT ID . '=' arr
+   35 int_assign: ID . '=' DIGIT
+   38           | ID .
+
+    '='  shift, and go to state 41
+
+    $default  reduce using rule 38 (int_assign)
+
+
+State 23
+
+   30 assignment: INT int_assign .
+   36 int_assign: int_assign . ',' ID '=' DIGIT
+   37           | int_assign . ',' ID
+
+    ','  shift, and go to state 42
+
+    $default  reduce using rule 30 (assignment)
+
+
+State 24
+
+    2 start: START newline stmt END .
+
+    $default  reduce using rule 2 (start)
+
+
+State 25
+
+    3 stmt: assignment newline .
+   10     | assignment newline . stmt
+
+    PRINT  shift, and go to state 9
+    ID     shift, and go to state 10
+    IF     shift, and go to state 11
+    FLOAT  shift, and go to state 12
+    INT    shift, and go to state 13
+
+    $default  reduce using rule 3 (stmt)
+
+    stmt        go to state 43
+    assignment  go to state 15
+
+
+State 26
+
+    1 start: START ID '(' ')' newline . '{' newline stmt newline '}' END
+
+    '{'  shift, and go to state 44
+
+
+State 27
+
+   28 expr: DIGIT .
+
+    $default  reduce using rule 28 (expr)
+
+
+State 28
+
+    6 stmt: PRINT '(' ID . ')' newline
+    7     | PRINT '(' ID . ')' newline stmt
+
+    ')'  shift, and go to state 45
+
+
+State 29
+
+   29 expr: FLOAT_DIGIT .
+
+    $default  reduce using rule 29 (expr)
+
+
+State 30
+
+   27 expr: '(' . expr ')'
+
+    DIGIT        shift, and go to state 27
+    FLOAT_DIGIT  shift, and go to state 29
+    '('          shift, and go to state 30
+
+    expr  go to state 46
+
+
+State 31
+
+    4 stmt: PRINT '(' expr . ')' newline
+    5     | PRINT '(' expr . ')' newline stmt
+   24 expr: expr . '+' expr
+   25     | expr . '-' expr
+   26     | expr . '*' expr
+
+    '+'  shift, and go to state 47
+    '-'  shift, and go to state 48
+    '*'  shift, and go to state 49
+    ')'  shift, and go to state 50
+
+
+State 32
+
+   59 dict: '{' . dict_ele1 '}'
+   60     | '{' . dict_ele2 '}'
+   61     | '{' . dict_ele3 '}'
+   62     | '{' . dict_ele4 '}'
+
+    DIGIT  shift, and go to state 51
+    ID     shift, and go to state 52
+
+    dict_ele1  go to state 53
+    dict_ele2  go to state 54
+    dict_ele3  go to state 55
+    dict_ele4  go to state 56
+
+
+State 33
+
+   34 assignment: ID '=' dict .
+
+    $default  reduce using rule 34 (assignment)
+
+
+State 34
+
+   15 COND: DIGIT .
+   21 var: DIGIT .
+
+    ')'       reduce using rule 15 (COND)
+    $default  reduce using rule 21 (var)
+
+
+State 35
+
+   23 var: ID .
+
+    $default  reduce using rule 23 (var)
+
+
+State 36
+
+   22 var: FLOAT_DIGIT .
+
+    $default  reduce using rule 22 (var)
+
+
+State 37
+
+    8 stmt: IF '(' COND . ')' newline stmt newline else ENDIF newline
+    9     | IF '(' COND . ')' newline stmt newline else ENDIF newline stmt
+
+    ')'  shift, and go to state 57
+
+
+State 38
+
+   16 COND: var . '<' var
+   17     | var . '>' var
+   18     | var . '<' '=' var
+   19     | var . '>' '=' var
+   20     | var . '=' '=' var
+
+    '<'  shift, and go to state 58
+    '>'  shift, and go to state 59
+    '='  shift, and go to state 60
+
+
+State 39
+
+   32 assignment: FLOAT ID '=' . arr
+   41 float_assign: ID '=' . FLOAT_DIGIT
+   42             | ID '=' . DIGIT
+
+    DIGIT        shift, and go to state 61
+    FLOAT_DIGIT  shift, and go to state 62
+    '['          shift, and go to state 63
+
+    arr  go to state 64
+
+
+State 40
+
+   39 float_assign: float_assign ',' . ID '=' FLOAT_DIGIT
+   40             | float_assign ',' . ID '=' DIGIT
+   43             | float_assign ',' . ID
+
+    ID  shift, and go to state 65
+
+
+State 41
+
+   33 assignment: INT ID '=' . arr
+   35 int_assign: ID '=' . DIGIT
+
+    DIGIT  shift, and go to state 66
+    '['    shift, and go to state 63
+
+    arr  go to state 67
+
+
+State 42
+
+   36 int_assign: int_assign ',' . ID '=' DIGIT
+   37           | int_assign ',' . ID
+
+    ID  shift, and go to state 68
+
+
+State 43
+
+   10 stmt: assignment newline stmt .
+
+    $default  reduce using rule 10 (stmt)
+
+
+State 44
+
+    1 start: START ID '(' ')' newline '{' . newline stmt newline '}' END
+
+    NL  shift, and go to state 4
+
+    newline  go to state 69
+
+
+State 45
+
+    6 stmt: PRINT '(' ID ')' . newline
+    7     | PRINT '(' ID ')' . newline stmt
+
+    NL  shift, and go to state 4
+
+    newline  go to state 70
+
+
+State 46
+
+   24 expr: expr . '+' expr
+   25     | expr . '-' expr
+   26     | expr . '*' expr
+   27     | '(' expr . ')'
+
+    '+'  shift, and go to state 47
+    '-'  shift, and go to state 48
+    '*'  shift, and go to state 49
+    ')'  shift, and go to state 71
+
+
+State 47
+
+   24 expr: expr '+' . expr
+
+    DIGIT        shift, and go to state 27
+    FLOAT_DIGIT  shift, and go to state 29
+    '('          shift, and go to state 30
+
+    expr  go to state 72
+
+
+State 48
+
+   25 expr: expr '-' . expr
+
+    DIGIT        shift, and go to state 27
+    FLOAT_DIGIT  shift, and go to state 29
+    '('          shift, and go to state 30
+
+    expr  go to state 73
+
+
+State 49
+
+   26 expr: expr '*' . expr
+
+    DIGIT        shift, and go to state 27
+    FLOAT_DIGIT  shift, and go to state 29
+    '('          shift, and go to state 30
+
+    expr  go to state 74
+
+
+State 50
+
+    4 stmt: PRINT '(' expr ')' . newline
+    5     | PRINT '(' expr ')' . newline stmt
+
+    NL  shift, and go to state 4
+
+    newline  go to state 75
+
+
+State 51
+
+   51 dict_ele1: DIGIT . ':' ID dict_ele1
+   52          | DIGIT . ':' ID
+   53 dict_ele2: DIGIT . ':' DIGIT dict_ele2
+   54          | DIGIT . ':' DIGIT
+
+    ':'  shift, and go to state 76
+
+
+State 52
+
+   55 dict_ele3: ID . ':' ID dict_ele3
+   56          | ID . ':' ID
+   57 dict_ele4: ID . ':' DIGIT dict_ele4
+   58          | ID . ':' DIGIT
+
+    ':'  shift, and go to state 77
+
+
+State 53
+
+   59 dict: '{' dict_ele1 . '}'
+
+    '}'  shift, and go to state 78
+
+
+State 54
+
+   60 dict: '{' dict_ele2 . '}'
+
+    '}'  shift, and go to state 79
+
+
+State 55
+
+   61 dict: '{' dict_ele3 . '}'
+
+    '}'  shift, and go to state 80
+
+
+State 56
+
+   62 dict: '{' dict_ele4 . '}'
+
+    '}'  shift, and go to state 81
+
+
+State 57
+
+    8 stmt: IF '(' COND ')' . newline stmt newline else ENDIF newline
+    9     | IF '(' COND ')' . newline stmt newline else ENDIF newline stmt
+
+    NL  shift, and go to state 4
+
+    newline  go to state 82
+
+
+State 58
+
+   16 COND: var '<' . var
+   18     | var '<' . '=' var
+
+    DIGIT        shift, and go to state 83
+    ID           shift, and go to state 35
+    FLOAT_DIGIT  shift, and go to state 36
+    '='          shift, and go to state 84
+
+    var  go to state 85
+
+
+State 59
+
+   17 COND: var '>' . var
+   19     | var '>' . '=' var
+
+    DIGIT        shift, and go to state 83
+    ID           shift, and go to state 35
+    FLOAT_DIGIT  shift, and go to state 36
+    '='          shift, and go to state 86
+
+    var  go to state 87
+
+
+State 60
+
+   20 COND: var '=' . '=' var
+
+    '='  shift, and go to state 88
+
+
+State 61
+
+   42 float_assign: ID '=' DIGIT .
+
+    $default  reduce using rule 42 (float_assign)
+
+
+State 62
+
+   41 float_assign: ID '=' FLOAT_DIGIT .
+
+    $default  reduce using rule 41 (float_assign)
+
+
+State 63
+
+   49 arr: '[' . arr_ele1 ']'
+   50    | '[' . arr_ele2 ']'
+
+    DIGIT  shift, and go to state 89
+    ID     shift, and go to state 90
+
+    arr_ele1  go to state 91
+    arr_ele2  go to state 92
+
+
+State 64
+
+   32 assignment: FLOAT ID '=' arr .
+
+    $default  reduce using rule 32 (assignment)
+
+
+State 65
+
+   39 float_assign: float_assign ',' ID . '=' FLOAT_DIGIT
+   40             | float_assign ',' ID . '=' DIGIT
+   43             | float_assign ',' ID .
+
+    '='  shift, and go to state 93
+
+    $default  reduce using rule 43 (float_assign)
+
+
+State 66
+
+   35 int_assign: ID '=' DIGIT .
+
+    $default  reduce using rule 35 (int_assign)
+
+
+State 67
+
+   33 assignment: INT ID '=' arr .
+
+    $default  reduce using rule 33 (assignment)
+
+
+State 68
+
+   36 int_assign: int_assign ',' ID . '=' DIGIT
+   37           | int_assign ',' ID .
+
+    '='  shift, and go to state 94
+
+    $default  reduce using rule 37 (int_assign)
+
+
+State 69
+
+    1 start: START ID '(' ')' newline '{' newline . stmt newline '}' END
+
+    PRINT  shift, and go to state 9
+    ID     shift, and go to state 10
+    IF     shift, and go to state 11
+    FLOAT  shift, and go to state 12
+    INT    shift, and go to state 13
+
+    stmt        go to state 95
+    assignment  go to state 15
+
+
+State 70
+
+    6 stmt: PRINT '(' ID ')' newline .
+    7     | PRINT '(' ID ')' newline . stmt
+
+    PRINT  shift, and go to state 9
+    ID     shift, and go to state 10
+    IF     shift, and go to state 11
+    FLOAT  shift, and go to state 12
+    INT    shift, and go to state 13
+
+    $default  reduce using rule 6 (stmt)
+
+    stmt        go to state 96
+    assignment  go to state 15
+
+
+State 71
+
+   27 expr: '(' expr ')' .
+
+    $default  reduce using rule 27 (expr)
+
+
+State 72
+
+   24 expr: expr . '+' expr
+   24     | expr '+' expr .
+   25     | expr . '-' expr
+   26     | expr . '*' expr
+
+    '*'  shift, and go to state 49
+
+    $default  reduce using rule 24 (expr)
+
+
+State 73
+
+   24 expr: expr . '+' expr
+   25     | expr . '-' expr
+   25     | expr '-' expr .
+   26     | expr . '*' expr
+
+    '*'  shift, and go to state 49
+
+    $default  reduce using rule 25 (expr)
+
+
+State 74
+
+   24 expr: expr . '+' expr
+   25     | expr . '-' expr
+   26     | expr . '*' expr
+   26     | expr '*' expr .
+
+    $default  reduce using rule 26 (expr)
+
+
+State 75
+
+    4 stmt: PRINT '(' expr ')' newline .
+    5     | PRINT '(' expr ')' newline . stmt
+
+    PRINT  shift, and go to state 9
+    ID     shift, and go to state 10
+    IF     shift, and go to state 11
+    FLOAT  shift, and go to state 12
+    INT    shift, and go to state 13
+
+    $default  reduce using rule 4 (stmt)
+
+    stmt        go to state 97
+    assignment  go to state 15
+
+
+State 76
+
+   51 dict_ele1: DIGIT ':' . ID dict_ele1
+   52          | DIGIT ':' . ID
+   53 dict_ele2: DIGIT ':' . DIGIT dict_ele2
+   54          | DIGIT ':' . DIGIT
+
+    DIGIT  shift, and go to state 98
+    ID     shift, and go to state 99
+
+
+State 77
+
+   55 dict_ele3: ID ':' . ID dict_ele3
+   56          | ID ':' . ID
+   57 dict_ele4: ID ':' . DIGIT dict_ele4
+   58          | ID ':' . DIGIT
+
+    DIGIT  shift, and go to state 100
+    ID     shift, and go to state 101
+
+
+State 78
+
+   59 dict: '{' dict_ele1 '}' .
+
+    $default  reduce using rule 59 (dict)
+
+
+State 79
+
+   60 dict: '{' dict_ele2 '}' .
+
+    $default  reduce using rule 60 (dict)
+
+
+State 80
+
+   61 dict: '{' dict_ele3 '}' .
+
+    $default  reduce using rule 61 (dict)
+
+
+State 81
+
+   62 dict: '{' dict_ele4 '}' .
+
+    $default  reduce using rule 62 (dict)
+
+
+State 82
+
+    8 stmt: IF '(' COND ')' newline . stmt newline else ENDIF newline
+    9     | IF '(' COND ')' newline . stmt newline else ENDIF newline stmt
+
+    PRINT  shift, and go to state 9
+    ID     shift, and go to state 10
+    IF     shift, and go to state 11
+    FLOAT  shift, and go to state 12
+    INT    shift, and go to state 13
+
+    stmt        go to state 102
+    assignment  go to state 15
+
+
+State 83
+
+   21 var: DIGIT .
+
+    $default  reduce using rule 21 (var)
+
+
+State 84
+
+   18 COND: var '<' '=' . var
+
+    DIGIT        shift, and go to state 83
+    ID           shift, and go to state 35
+    FLOAT_DIGIT  shift, and go to state 36
+
+    var  go to state 103
+
+
+State 85
+
+   16 COND: var '<' var .
+
+    $default  reduce using rule 16 (COND)
+
+
+State 86
+
+   19 COND: var '>' '=' . var
+
+    DIGIT        shift, and go to state 83
+    ID           shift, and go to state 35
+    FLOAT_DIGIT  shift, and go to state 36
+
+    var  go to state 104
+
+
+State 87
+
+   17 COND: var '>' var .
+
+    $default  reduce using rule 17 (COND)
+
+
+State 88
+
+   20 COND: var '=' '=' . var
+
+    DIGIT        shift, and go to state 83
+    ID           shift, and go to state 35
+    FLOAT_DIGIT  shift, and go to state 36
+
+    var  go to state 105
+
+
+State 89
+
+   47 arr_ele2: DIGIT .
+   48         | DIGIT . ',' arr_ele2
+
+    ','  shift, and go to state 106
+
+    $default  reduce using rule 47 (arr_ele2)
+
+
+State 90
+
+   45 arr_ele1: ID .
+   46         | ID . ',' arr_ele1
+
+    ','  shift, and go to state 107
+
+    $default  reduce using rule 45 (arr_ele1)
+
+
+State 91
+
+   49 arr: '[' arr_ele1 . ']'
+
+    ']'  shift, and go to state 108
+
+
+State 92
+
+   50 arr: '[' arr_ele2 . ']'
+
+    ']'  shift, and go to state 109
+
+
+State 93
+
+   39 float_assign: float_assign ',' ID '=' . FLOAT_DIGIT
+   40             | float_assign ',' ID '=' . DIGIT
+
+    DIGIT        shift, and go to state 110
+    FLOAT_DIGIT  shift, and go to state 111
+
+
+State 94
+
+   36 int_assign: int_assign ',' ID '=' . DIGIT
+
+    DIGIT  shift, and go to state 112
+
+
+State 95
+
+    1 start: START ID '(' ')' newline '{' newline stmt . newline '}' END
+
+    NL  shift, and go to state 4
+
+    newline  go to state 113
+
+
+State 96
+
+    7 stmt: PRINT '(' ID ')' newline stmt .
+
+    $default  reduce using rule 7 (stmt)
+
+
+State 97
+
+    5 stmt: PRINT '(' expr ')' newline stmt .
+
+    $default  reduce using rule 5 (stmt)
+
+
+State 98
+
+   53 dict_ele2: DIGIT ':' DIGIT . dict_ele2
+   54          | DIGIT ':' DIGIT .
+
+    DIGIT  shift, and go to state 114
+
+    $default  reduce using rule 54 (dict_ele2)
+
+    dict_ele2  go to state 115
+
+
+State 99
+
+   51 dict_ele1: DIGIT ':' ID . dict_ele1
+   52          | DIGIT ':' ID .
+
+    DIGIT  shift, and go to state 116
+
+    $default  reduce using rule 52 (dict_ele1)
+
+    dict_ele1  go to state 117
+
+
+State 100
+
+   57 dict_ele4: ID ':' DIGIT . dict_ele4
+   58          | ID ':' DIGIT .
+
+    ID  shift, and go to state 118
+
+    $default  reduce using rule 58 (dict_ele4)
+
+    dict_ele4  go to state 119
+
+
+State 101
+
+   55 dict_ele3: ID ':' ID . dict_ele3
+   56          | ID ':' ID .
+
+    ID  shift, and go to state 120
+
+    $default  reduce using rule 56 (dict_ele3)
+
+    dict_ele3  go to state 121
+
+
+State 102
+
+    8 stmt: IF '(' COND ')' newline stmt . newline else ENDIF newline
+    9     | IF '(' COND ')' newline stmt . newline else ENDIF newline stmt
+
+    NL  shift, and go to state 4
+
+    newline  go to state 122
+
+
+State 103
+
+   18 COND: var '<' '=' var .
+
+    $default  reduce using rule 18 (COND)
+
+
+State 104
+
+   19 COND: var '>' '=' var .
+
+    $default  reduce using rule 19 (COND)
+
+
+State 105
+
+   20 COND: var '=' '=' var .
+
+    $default  reduce using rule 20 (COND)
+
+
+State 106
+
+   48 arr_ele2: DIGIT ',' . arr_ele2
+
+    DIGIT  shift, and go to state 89
+
+    arr_ele2  go to state 123
+
+
+State 107
+
+   46 arr_ele1: ID ',' . arr_ele1
+
+    ID  shift, and go to state 90
+
+    arr_ele1  go to state 124
+
+
+State 108
+
+   49 arr: '[' arr_ele1 ']' .
+
+    $default  reduce using rule 49 (arr)
+
+
+State 109
+
+   50 arr: '[' arr_ele2 ']' .
+
+    $default  reduce using rule 50 (arr)
+
+
+State 110
+
+   40 float_assign: float_assign ',' ID '=' DIGIT .
+
+    $default  reduce using rule 40 (float_assign)
+
+
+State 111
+
+   39 float_assign: float_assign ',' ID '=' FLOAT_DIGIT .
+
+    $default  reduce using rule 39 (float_assign)
+
+
+State 112
+
+   36 int_assign: int_assign ',' ID '=' DIGIT .
+
+    $default  reduce using rule 36 (int_assign)
+
+
+State 113
+
+    1 start: START ID '(' ')' newline '{' newline stmt newline . '}' END
+
+    '}'  shift, and go to state 125
+
+
+State 114
+
+   53 dict_ele2: DIGIT . ':' DIGIT dict_ele2
+   54          | DIGIT . ':' DIGIT
+
+    ':'  shift, and go to state 126
+
+
+State 115
+
+   53 dict_ele2: DIGIT ':' DIGIT dict_ele2 .
+
+    $default  reduce using rule 53 (dict_ele2)
+
+
+State 116
+
+   51 dict_ele1: DIGIT . ':' ID dict_ele1
+   52          | DIGIT . ':' ID
+
+    ':'  shift, and go to state 127
+
+
+State 117
+
+   51 dict_ele1: DIGIT ':' ID dict_ele1 .
+
+    $default  reduce using rule 51 (dict_ele1)
+
+
+State 118
+
+   57 dict_ele4: ID . ':' DIGIT dict_ele4
+   58          | ID . ':' DIGIT
+
+    ':'  shift, and go to state 128
+
+
+State 119
+
+   57 dict_ele4: ID ':' DIGIT dict_ele4 .
+
+    $default  reduce using rule 57 (dict_ele4)
+
+
+State 120
+
+   55 dict_ele3: ID . ':' ID dict_ele3
+   56          | ID . ':' ID
+
+    ':'  shift, and go to state 129
+
+
+State 121
+
+   55 dict_ele3: ID ':' ID dict_ele3 .
+
+    $default  reduce using rule 55 (dict_ele3)
+
+
+State 122
+
+    8 stmt: IF '(' COND ')' newline stmt newline . else ENDIF newline
+    9     | IF '(' COND ')' newline stmt newline . else ENDIF newline stmt
+
+    ELSE  shift, and go to state 130
+    NL    shift, and go to state 4
+
+    else     go to state 131
+    newline  go to state 132
+
+
+State 123
+
+   48 arr_ele2: DIGIT ',' arr_ele2 .
+
+    $default  reduce using rule 48 (arr_ele2)
+
+
+State 124
+
+   46 arr_ele1: ID ',' arr_ele1 .
+
+    $default  reduce using rule 46 (arr_ele1)
+
+
+State 125
+
+    1 start: START ID '(' ')' newline '{' newline stmt newline '}' . END
+
+    END  shift, and go to state 133
+
+
+State 126
+
+   53 dict_ele2: DIGIT ':' . DIGIT dict_ele2
+   54          | DIGIT ':' . DIGIT
+
+    DIGIT  shift, and go to state 98
+
+
+State 127
+
+   51 dict_ele1: DIGIT ':' . ID dict_ele1
+   52          | DIGIT ':' . ID
+
+    ID  shift, and go to state 99
+
+
+State 128
+
+   57 dict_ele4: ID ':' . DIGIT dict_ele4
+   58          | ID ':' . DIGIT
+
+    DIGIT  shift, and go to state 100
+
+
+State 129
+
+   55 dict_ele3: ID ':' . ID dict_ele3
+   56          | ID ':' . ID
+
+    ID  shift, and go to state 101
+
+
+State 130
+
+   11 else: ELSE . stmt
+
+    PRINT  shift, and go to state 9
+    ID     shift, and go to state 10
+    IF     shift, and go to state 11
+    FLOAT  shift, and go to state 12
+    INT    shift, and go to state 13
+
+    stmt        go to state 134
+    assignment  go to state 15
+
+
+State 131
+
+    8 stmt: IF '(' COND ')' newline stmt newline else . ENDIF newline
+    9     | IF '(' COND ')' newline stmt newline else . ENDIF newline stmt
+
+    ENDIF  shift, and go to state 135
+
+
+State 132
+
+   12 else: newline . stmt
+
+    PRINT  shift, and go to state 9
+    ID     shift, and go to state 10
+    IF     shift, and go to state 11
+    FLOAT  shift, and go to state 12
+    INT    shift, and go to state 13
+
+    stmt        go to state 136
+    assignment  go to state 15
+
+
+State 133
+
+    1 start: START ID '(' ')' newline '{' newline stmt newline '}' END .
+
+    $default  reduce using rule 1 (start)
+
+
+State 134
+
+   11 else: ELSE stmt .
+
+    $default  reduce using rule 11 (else)
+
+
+State 135
+
+    8 stmt: IF '(' COND ')' newline stmt newline else ENDIF . newline
+    9     | IF '(' COND ')' newline stmt newline else ENDIF . newline stmt
+
+    NL  shift, and go to state 4
+
+    newline  go to state 137
+
+
+State 136
+
+   12 else: newline stmt .
+
+    $default  reduce using rule 12 (else)
+
+
+State 137
+
+    8 stmt: IF '(' COND ')' newline stmt newline else ENDIF newline .
+    9     | IF '(' COND ')' newline stmt newline else ENDIF newline . stmt
+
+    PRINT  shift, and go to state 9
+    ID     shift, and go to state 10
+    IF     shift, and go to state 11
+    FLOAT  shift, and go to state 12
+    INT    shift, and go to state 13
+
+    $default  reduce using rule 8 (stmt)
+
+    stmt        go to state 138
+    assignment  go to state 15
+
+
+State 138
+
+    9 stmt: IF '(' COND ')' newline stmt newline else ENDIF newline stmt .
+
+    $default  reduce using rule 9 (stmt)
