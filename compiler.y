@@ -7,14 +7,19 @@
   int table[100],i,count=0;
   int overall_level = 0;
   char symbol[100][100], temp[100];
-
-  struct 
+  char* test;
+  struct
   {
   	int t[100];
   	int s[100];
   }levels[1000];
 
 %}
+
+%union { char* str; }
+
+%type<str> ID
+
 
 %token DIGIT PRINT ID IF ENDIF ELSE START END TAB IN RANGE FOR ENDFOR FLOAT_DIGIT NL FLOAT INT
 
@@ -24,7 +29,7 @@
 
 %%
 
-start:	START ID '(' ')' newline '{' newline stmt newline '}' END 	{			
+start:	START ID '(' ')' newline '{' newline stmt newline '}' END 	{
 																			printf("Compiled successfully\n");
 																			exit(0);
 																	}
@@ -59,9 +64,9 @@ COND: DIGIT
       | var '>''=' var
       | var '=''=' var
 
-var :DIGIT 
+var :DIGIT
 	|FLOAT_DIGIT
-	|ID 
+	|ID
 	;
 
 expr: expr '+' expr
@@ -140,6 +145,7 @@ int main()
 }
 int insert(int x)
 {
+  printf("variable name: %s\n",temp);
 	int i=0, flag = 0, eq_flag = 0;
 	char temp2[100];
 	while(temp[i]!='\0')
@@ -153,7 +159,7 @@ int insert(int x)
 	{
 		if(strcmp(temp2, symbol[i])==0)
 		{
-			if(table[i]==x)		
+			if(table[i]==x)
 				printf("Redecleration of variable\n");
 			else
 				printf("Multiple decleration of variable\n");
@@ -167,3 +173,4 @@ int insert(int x)
 		count++;
 	}
 }
+

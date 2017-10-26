@@ -29,7 +29,7 @@ digit [0-9]
 "start" {return START;}
 {digit}+"."{digit}+ {return FLOAT_DIGIT;}
 {digit}+ {return DIGIT;}
-{alpha}({alpha}|{digit})* {yylval=yytext;
+{alpha}({alpha}|{digit})* {yylval.str=strdup(yytext);
 						   return ID;}
 
 \/\/.* ;
@@ -42,3 +42,4 @@ yywrap()
 {
 	return 1;
 }
+
