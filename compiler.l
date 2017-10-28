@@ -1,6 +1,7 @@
 %{
   #include <stdio.h>
   #include "y.tab.h"
+  int lvl = 0;
 %}
 
 alpha [a-zA-Z]
@@ -19,8 +20,18 @@ digit [0-9]
 "int" {return INT;}
 "float" {return FLOAT;}
 "else" {return ELSE;}
-"endif" {return ENDIF;}
-"if" {return IF;}
+"endif" {
+		lvl--;
+		FILE *fptr = fopen("if_lvl.txt", "w");
+		fprintf(fptr,"%d", lvl);
+		fclose(fptr);
+		return ENDIF;}
+"if" {
+	lvl++;
+	FILE *fptr = fopen("if_lvl.txt", "w");
+	fprintf(fptr,"%d", lvl);
+	fclose(fptr);
+	return IF;}
 "endfor" {return ENDFOR;}
 "end" {return END;}
 "for" {return FOR;}

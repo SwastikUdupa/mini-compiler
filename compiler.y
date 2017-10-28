@@ -1,24 +1,24 @@
-%{
+ %{
   #include <stdio.h>
   #include <string.h>
   #include <stdlib.h>
   int yyerror();
 
-  int table[100],i,count=0;
-  int overall_level = 0;
+  int table[100],i,count[100] = {0};
   char symbol[100][100], temp[100];
   char* test;
   struct
   {
   	int t[100];
-  	int s[100];
+  	char s[100][100];
   }levels[1000];
 
 %}
 
-%union { char* str; }
+%union { char* str;}
 
 %type<str> ID
+
 
 
 %token DIGIT PRINT ID IF ENDIF ELSE START END TAB IN RANGE FOR ENDFOR FLOAT_DIGIT NL FLOAT INT
@@ -30,10 +30,16 @@
 %%
 
 start:	START ID '(' ')' newline '{' newline stmt newline '}' END 	{
+																			FILE *fptr = fopen("if_lvl.txt", "w");
+																			fprintf(fptr, "0");
+																			fclose(fptr);
 																			printf("Compiled successfully\n");
 																			exit(0);
 																	}
 		|START newline stmt END			{
+											FILE *fptr = fopen("if_lvl.txt", "w");
+											fprintf(fptr, "0");
+											fclose(fptr);
 											printf("Compiled successfully\n");
 											exit(0);
 										}
@@ -45,14 +51,15 @@ stmt:	assignment newline
 		|PRINT '(' expr ')' newline stmt
 		|PRINT '(' ID ')' newline
 		|PRINT '(' ID ')' newline stmt
-		|IF '(' COND ')' newline stmt newline else ENDIF newline
-    	|IF '(' COND ')' newline stmt newline else ENDIF newline stmt
+		|IF '(' COND ')' newline stmt else ENDIF newline stmt{}
+		|IF '(' COND ')' newline stmt else ENDIF newline
+    	|IF '(' COND ')' newline stmt ENDIF newline stmt{}
+    	|IF '(' COND ')' newline stmt ENDIF newline
 		|assignment newline stmt
 	;
 
-else: 	ELSE stmt
-		|newline stmt
-	;
+else: 	ELSE newline stmt
+	
 
 newline: NL newline
 		|NL
@@ -133,6 +140,9 @@ dict:'{' dict_ele1 '}'
 
 int yyerror()
 {
+	FILE *fptr = fopen("if_lvl.txt", "w");
+	fprintf(fptr, "0");
+	fclose(fptr);
 	printf("Syntax Error\n");
 	return 0;
 }
@@ -145,21 +155,13 @@ int main()
 }
 int insert(int x)
 {
-  printf("variable name: %s\n",temp);
-	int i=0, flag = 0, eq_flag = 0;
-	char temp2[100];
-	while(temp[i]!='\0')
+	int flag = 0;
+	int lvl = lvl_check();
+	for(i=0;i<count[lvl];i++)
 	{
-		if(temp[i]=='=')
-			break;
-		temp2[i] = temp[i];
-		i++;
-	}
-	for(i=0;i<count;i++)
-	{
-		if(strcmp(temp2, symbol[i])==0)
+		if(strcmp(temp, levels[lvl].s[i])==0)
 		{
-			if(table[i]==x)
+			if(levels[lvl].t[i]==x)
 				printf("Redecleration of variable\n");
 			else
 				printf("Multiple decleration of variable\n");
@@ -168,9 +170,18 @@ int insert(int x)
 	}
 	if(flag == 0)
 	{
-		strcpy(symbol[count], temp2);
-		table[count] = x;
-		count++;
+		strcpy(levels[lvl].s[count[lvl]], temp);
+		levels[lvl].t[count[lvl]] = x;
+		count[lvl]++;
 	}
+}
+int lvl_check()
+{
+	int lvl;
+	FILE *fptr = fopen("if_lvl.txt", "r");
+	char ch = fgetc(fptr);
+	lvl = ch-'0';
+	fclose(fptr);
+	return lvl;
 }
 
