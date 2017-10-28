@@ -2,11 +2,14 @@
   #include <stdio.h>
   #include <string.h>
   #include <stdlib.h>
+  #include<stdbool.h>
   int yyerror();
 
   int table[100],i,count[100] = {0};
   char symbol[100][100], temp[100];
+  char str[100];
   char* test;
+  int type;
   struct
   {
   	int t[100];
@@ -56,10 +59,12 @@ stmt:	assignment newline
     	|IF '(' COND ')' newline stmt ENDIF newline stmt{}
     	|IF '(' COND ')' newline stmt ENDIF newline
 		|assignment newline stmt
+    | assign newline stmt
+    | assign newline
 	;
 
 else: 	ELSE newline stmt
-	
+
 
 newline: NL newline
 		|NL
@@ -90,6 +95,12 @@ assignment:INT int_assign
 		  |INT ID '=' arr
 		  |ID '=' dict
 	;
+
+assign: ID '=' DIGIT                       {strcpy(str, (char*)$1);IntDeclared();}
+      | ID '=' FLOAT_DIGIT                   {strcpy(str, (char*)$1);FloatDeclared();}
+      | ID                                  {printf("Syntax Error\n");exit(0);}
+ ;
+
 
 int_assign:ID '=' DIGIT 							{strcpy(temp, (char*)$1);insert(0);}
 		  |int_assign ',' ID '=' DIGIT 				{strcpy(temp, (char*)$3);insert(0);}
@@ -185,3 +196,55 @@ int lvl_check()
 	return lvl;
 }
 
+int IntDeclared()
+{
+  int lvl=lvl_check();
+  bool declared=0;
+  char temp2[100];
+
+  for(int j=0;j<count[lvl];j++)
+  {
+    if(strcmp(str,levels[lvl].s[j])==0)
+    {
+      if(levels[lvl].t[j]==0){
+      declared=1;
+      break;
+    }
+      else{
+        printf("Incompatible types");
+        return;
+      }
+    }
+  }
+  if(declared==0)
+  {
+    printf("Declare before assigning a value\n");
+    return;
+  }
+}
+
+int FloatDeclared()
+{
+  int lvl=lvl_check();
+  bool declared=0;
+
+  for(int j=0;j<count[lvl];j++)
+  {
+    if(strcmp(str,levels[lvl].s[j])==0)
+    {
+      if(levels[lvl].t[j]==1){
+      declared=1;
+      break;
+    }
+      else{
+        printf("Incompatible types");
+        return;
+      }
+    }
+  }
+  if(declared==0)
+  {
+    printf("Declare before assigning a value\n");
+    return;
+  }
+}
