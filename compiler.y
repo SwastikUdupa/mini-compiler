@@ -1,3 +1,4 @@
+
  %{
   #include <stdio.h>
   #include <string.h>
@@ -70,7 +71,7 @@ newline: NL newline
 		|NL
 
 COND: DIGIT
-      | var '<' var
+      | var '<' var          
       | var '>' var
       | var '<''=' var
       | var '>''=' var
@@ -78,7 +79,7 @@ COND: DIGIT
 
 var :DIGIT
 	|FLOAT_DIGIT
-	|ID
+	|ID {strcpy(str, (char*)$1);IntDeclared(1);}
 	;
 
 expr: expr '+' expr
@@ -96,9 +97,10 @@ assignment:INT int_assign
 		  |ID '=' dict
 	;
 
-assign: ID '=' DIGIT                       {strcpy(str, (char*)$1);IntDeclared();}
-      | ID '=' FLOAT_DIGIT                   {strcpy(str, (char*)$1);FloatDeclared();}
+assign: ID '=' DIGIT                       {strcpy(str, (char*)$1);IntDeclared(0);}
+      | ID '=' FLOAT_DIGIT                   {strcpy(str, (char*)$1);FloatDeclared(0);}
       | ID                                  {printf("Syntax Error\n");exit(0);}
+      | ID '=' ID                           {strcpy(str, (char*)$1);IntDeclared(0);strcpy(str, (char*)$3);IntDeclared(0);}
  ;
 
 
@@ -160,6 +162,9 @@ int yyerror()
 
 int main()
 {
+  FILE *fptr = fopen("if_lvl.txt", "w");
+  fprintf(fptr, "0");
+  fclose(fptr);	 
   yyparse();
 
   return 1;
@@ -187,7 +192,7 @@ int insert(int x)
 	}
 }
 int lvl_check()
-{
+{	
 	int lvl;
 	FILE *fptr = fopen("if_lvl.txt", "r");
 	char ch = fgetc(fptr);
@@ -196,17 +201,21 @@ int lvl_check()
 	return lvl;
 }
 
-int IntDeclared()
+void IntDeclared(int flag)
 {
   int lvl=lvl_check();
+  if(flag==1)
+  	lvl--;
+  int k=0;
   bool declared=0;
   char temp2[100];
-
-  for(int j=0;j<count[lvl];j++)
+  for(k=0;k<=lvl;k++)
   {
-    if(strcmp(str,levels[lvl].s[j])==0)
+  	for(int j=0;j<count[k];j++)
+  {
+    if(strcmp(str,levels[k].s[j])==0)
     {
-      if(levels[lvl].t[j]==0){
+      if(levels[k].t[j]==0){
       declared=1;
       break;
     }
@@ -216,6 +225,8 @@ int IntDeclared()
       }
     }
   }
+  }
+  
   if(declared==0)
   {
     printf("Declare before assigning a value\n");
@@ -223,28 +234,29 @@ int IntDeclared()
   }
 }
 
-int FloatDeclared()
+void FloatDeclared(int flag)
 {
-  int lvl=lvl_check();
+  int lvl=lvl_check(), k=0;
+  if(flag==1)
+  	lvl--;
   bool declared=0;
-
-  for(int j=0;j<count[lvl];j++)
+  for(k=0;k<=lvl;k++)
   {
-    if(strcmp(str,levels[lvl].s[j])==0)
+  	for(int j=0;j<count[k];j++)
+  {
+    if(strcmp(str,levels[k].s[j])==0)
     {
-      if(levels[lvl].t[j]==1){
+      if(levels[k].t[j]==1){
       declared=1;
       break;
     }
       else{
         printf("Incompatible types");
-        return;
+        break;
       }
     }
   }
-  if(declared==0)
-  {
-    printf("Declare before assigning a value\n");
-    return;
   }
+  if(declared==0)
+    printf("Declare before assigning a value\n");
 }
