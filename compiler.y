@@ -25,7 +25,7 @@
 
 
 
-%token DIGIT PRINT ID IF ENDIF ELSE START END TAB IN RANGE FOR ENDFOR FLOAT_DIGIT NL FLOAT INT
+%token DIGIT PRINT ID IF ENDIF ELSE START END TAB IN RANGE FOR ENDFOR FLOAT_DIGIT NL FLOAT INT WHILE ENDWHILE
 
 
 %left '+' '-'
@@ -55,11 +55,15 @@ stmt:	assignment newline
 		|PRINT '(' expr ')' newline stmt
 		|PRINT '(' ID ')' newline
 		|PRINT '(' ID ')' newline stmt
-		|IF '(' COND ')' newline stmt else ENDIF newline stmt{}
+    | WHILE '(' COND ')' newline stmt ENDWHILE newline stmt
+    | WHILE '(' COND ')' newline stmt ENDWHILE newline
+		|IF '(' COND ')' newline stmt else ENDIF newline stmt
 		|IF '(' COND ')' newline stmt else ENDIF newline
-    	|IF '(' COND ')' newline stmt ENDIF newline stmt{}
-    	|IF '(' COND ')' newline stmt ENDIF newline
-		|assignment newline stmt
+  	|IF '(' COND ')' newline stmt ENDIF newline stmt
+  	|IF '(' COND ')' newline stmt ENDIF newline
+    | FOR ID IN RANGE DIGIT newline stmt ENDFOR newline
+    | FOR ID IN RANGE DIGIT newline stmt ENDFOR newline stmt
+    |assignment newline stmt
     | assign newline stmt
     | assign newline
 	;
@@ -71,7 +75,7 @@ newline: NL newline
 		|NL
 
 COND: DIGIT
-      | var '<' var          
+      | var '<' var
       | var '>' var
       | var '<''=' var
       | var '>''=' var
@@ -164,7 +168,7 @@ int main()
 {
   FILE *fptr = fopen("if_lvl.txt", "w");
   fprintf(fptr, "0");
-  fclose(fptr);	 
+  fclose(fptr);
   yyparse();
 
   return 1;
@@ -192,7 +196,7 @@ int insert(int x)
 	}
 }
 int lvl_check()
-{	
+{
 	int lvl;
 	FILE *fptr = fopen("if_lvl.txt", "r");
 	char ch = fgetc(fptr);
@@ -226,7 +230,7 @@ void IntDeclared(int flag)
     }
   }
   }
-  
+
   if(declared==0)
   {
     printf("Declare before assigning a value\n");

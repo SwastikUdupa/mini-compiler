@@ -20,6 +20,18 @@ digit [0-9]
 "int" {return INT;}
 "float" {return FLOAT;}
 "else" {return ELSE;}
+"while" {
+      lvl++;
+      FILE *fptr = fopen("if_lvl.txt", "w");
+      fprintf(fptr,"%d", lvl);
+      fclose(fptr);
+      return WHILE;}
+"endwhile"  {
+      lvl--;
+      FILE *fptr = fopen("if_lvl.txt", "w");
+      fprintf(fptr,"%d", lvl);
+      fclose(fptr);
+      return ENDWHILE;}
 "endif" {
 		lvl--;
 		FILE *fptr = fopen("if_lvl.txt", "w");
@@ -32,11 +44,23 @@ digit [0-9]
 	fprintf(fptr,"%d", lvl);
 	fclose(fptr);
 	return IF;}
-"endfor" {return ENDFOR;}
 "end" {return END;}
-"for" {return FOR;}
+"for" {
+      lvl++;
+      FILE *fptr = fopen("if_lvl.txt", "w");
+      fprintf(fptr,"%d", lvl);
+      fclose(fptr);
+      return FOR;
+}
 "in" {return IN;}
 "range" {return RANGE;}
+"endfor"  {
+        lvl--;
+        FILE *fptr = fopen("if_lvl.txt", "w");
+        fprintf(fptr,"%d", lvl);
+        fclose(fptr);
+        return ENDFOR;}
+
 "start" {return START;}
 {digit}+"."{digit}+ {return FLOAT_DIGIT;}
 {digit}+ {return DIGIT;}
