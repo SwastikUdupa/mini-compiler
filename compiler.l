@@ -2,6 +2,7 @@
   #include <stdio.h>
   #include "y.tab.h"
   int lvl = 0;
+  int line_num = -1;
 %}
 
 alpha [a-zA-Z]
@@ -9,8 +10,14 @@ digit [0-9]
 
 %%
 
+
 [\t] {return TAB;}
-[\n] {return NL;}
+[\n] {
+		line_num++;
+		FILE *fptr = fopen("line_num.txt", "w");
+		fprintf(fptr,"%d", line_num);
+		fclose(fptr);
+		return NL;}
 " "  ;
 "+" {return *yytext;}
 "-" {return *yytext;}

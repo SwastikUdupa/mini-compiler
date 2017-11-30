@@ -21,6 +21,7 @@
 
 %union { char* str;}
 
+
 %type<str> ID
 
 
@@ -90,7 +91,7 @@ expr: expr '+' expr
 	| FLOAT_DIGIT
 	;
 
-assignment:INT int_assign
+assignment:INT int_assign 
 		  |FLOAT float_assign
 		  |FLOAT ID '=' arr
 		  |INT ID '=' arr
@@ -99,7 +100,6 @@ assignment:INT int_assign
 
 assign: ID '=' DIGIT                       {strcpy(str, (char*)$1);IntDeclared(0);}
       | ID '=' FLOAT_DIGIT                   {strcpy(str, (char*)$1);FloatDeclared(0);}
-      | ID                                  {printf("Syntax Error\n");exit(0);}
       | ID '=' ID                           {strcpy(str, (char*)$1);IntDeclared(0);strcpy(str, (char*)$3);IntDeclared(0);}
  ;
 
@@ -156,7 +156,10 @@ int yyerror()
 	FILE *fptr = fopen("if_lvl.txt", "w");
 	fprintf(fptr, "0");
 	fclose(fptr);
-	printf("Syntax Error\n");
+	int y = getLineNum();
+	printf("Line Number: %d Syntax Error\n", y);
+	FILE *fptr3 = fopen("line_num.txt", "w");
+	fprintf(fptr3,"0");
 	return 0;
 }
 
@@ -178,9 +181,15 @@ int insert(int x)
 		if(strcmp(temp, levels[lvl].s[i])==0)
 		{
 			if(levels[lvl].t[i]==x)
-				printf("Redecleration of variable\n");
+			{
+				int y = getLineNum();
+				printf("Redecleration of variable Line Num: %d\n", y);
+			}
 			else
-				printf("Multiple decleration of variable\n");
+			{
+				int y = getLineNum();
+				printf("Multiple decleration of variable %d\n", y);
+			}
 			flag = 1;
 		}
 	}
@@ -229,11 +238,18 @@ void IntDeclared(int flag)
   
   if(declared==0)
   {
-    printf("Declare before assigning a value\n");
+  	int y = getLineNum();
+    printf("Declare before assigning a value Line No: %d\n", y);
     return;
   }
 }
-
+int getLineNum()
+{
+	FILE *fptr2= fopen("line_num.txt", "r");
+	char x = fgetc(fptr2);
+	int y = x-'0'+1;
+	return y;
+}
 void FloatDeclared(int flag)
 {
   int lvl=lvl_check(), k=0;
@@ -251,12 +267,17 @@ void FloatDeclared(int flag)
       break;
     }
       else{
-        printf("Incompatible types");
+      	int y = getLineNum();
+        printf("Incompatible types line No: %d", y);
         break;
       }
     }
   }
   }
   if(declared==0)
-    printf("Declare before assigning a value\n");
+  {
+  	int y = getLineNum();
+  	printf("Declare before assigning a value Line No: %d\n", y);
+  }
+    
 }
